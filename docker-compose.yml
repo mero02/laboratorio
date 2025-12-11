@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+
+  monitor:
+    build: ./monitor
+    container_name: monitor
+    networks:
+      - monitoring-net
+
+  cliente1:
+    build: ./cliente1
+    container_name: cliente1
+    networks:
+      - monitoring-net
+
+networks:
+  monitoring-net:
+    driver: bridge
