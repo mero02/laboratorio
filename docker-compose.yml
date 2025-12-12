@@ -24,6 +24,16 @@ services:
       - "5000:5000"
     networks:
       - monitoring-net
+  
+  jaeger:
+    image: jaegertracing/all-in-one:1.51
+    container_name: jaeger
+    hostname: jaeger
+    ports:
+      - "16686:16686"  # UI
+      - "4318:4318"    # OTLP HTTP
+    networks:
+      - monitoring-net
 
 networks:
   monitoring-net:

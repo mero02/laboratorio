@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar app
 COPY app.py .
+COPY instrumentation.py .
 
 EXPOSE 5000
 

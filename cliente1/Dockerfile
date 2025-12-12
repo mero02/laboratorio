@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 # Copiamos configuración del agente SNMP
 COPY snmpd.conf /etc/snmp/snmpd.conf
-COPY rsyslog.conf /etc/rsyslog.conf
+COPY rsyslog-client.conf /etc/rsyslog.conf
 
 CMD ["/usr/sbin/snmpd", "-f", "-Lo"]
 
