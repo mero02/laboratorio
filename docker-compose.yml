@@ -5,12 +5,14 @@ services:
   monitor:
     build: ./monitor
     container_name: monitor
+    hostname: monitor
     networks:
       - monitoring-net
 
   cliente1:
     build: ./cliente1
     container_name: cliente1
+    hostname: cliente1
     networks:
       - monitoring-net
 
