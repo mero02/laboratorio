@@ -32,7 +32,8 @@ Todos los servicios se ejecutan en una red Docker bridge dedicada llamada `monit
 ### Flask App
 - **Tecnologías**: Python 3.10, Flask 3.0.0, OpenTelemetry
 - **Funcionalidades**:
-  - API REST con endpoints básicos (`/`, `/ping`, `/compute`)
+  - API REST con endpoints básicos (`/`, `/ping`, `/compute`, `/demo`)
+  - Interfaz web con templates HTML para navegación y demo interactiva
   - Instrumentación automática de Flask con OpenTelemetry
   - Trazas manuales en operaciones específicas
   - Envío de trazas a Jaeger vía exportador Jaeger (UDP)
@@ -102,6 +103,7 @@ Todos los servicios se ejecutan en una red Docker bridge dedicada llamada `monit
   - `GET /`: Mensaje de bienvenida
   - `GET /ping`: Verificación de estado
   - `GET /compute`: Operación de ejemplo con delay
+  - `GET /demo`: Demo interactiva del laboratorio
 
 ### Acceso a Jaeger UI
 - URL: http://localhost:16686
@@ -143,15 +145,24 @@ La aplicación Flask está configurada con:
 ├── cliente1/
 │   ├── Dockerfile
 │   ├── rsyslog-client.conf
-│   └── snmpd.conf
+│   ├── snmpd.conf
+│   └── start.sh
 ├── flask-app/
 │   ├── Dockerfile
 │   ├── app.py
 │   ├── instrumentation.py
-│   └── requirements.txt
+│   ├── requirements.txt
+│   ├── static/
+│   │   ├── script.js
+│   │   ├── style.css
+│   │   └── images/
+│   └── templates/
+│       ├── demo.html
+│       └── index.html
 └── monitor/
     ├── Dockerfile
-    └── rsyslog-server.conf
+    ├── rsyslog-server.conf
+    └── start.sh
 ```
 
 ### Modificación de Configuraciones
@@ -198,6 +209,10 @@ docker-compose logs jaeger
 - **Logging**: rsyslog
 - **Monitoreo**: SNMP
 - **Sistema Base**: Ubuntu 22.04
+
+## Contexto Académico
+
+Este proyecto fue desarrollado como parte del curso **Administración y Seguridad de Redes**, con el objetivo de demostrar la implementación práctica de conceptos de monitoreo, logging, y observabilidad en entornos de red distribuidos.
 
 ## Licencia
 
