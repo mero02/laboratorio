@@ -9,4 +9,11 @@ RUN apt-get update && apt-get install -y \
     net-tools \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-CMD ["tail", "-f", "/dev/null"]
+COPY rsyslog-server.conf /etc/rsyslog.d/01-server.conf
+COPY start.sh /start.sh
+
+RUN chmod +x /start.sh
+RUN sed -i 's/^mibs :/# mibs :/' /etc/snmp/snmp.conf && \
+    download-mibs
+
+CMD ["/start.sh"]
