@@ -70,7 +70,7 @@ Todos los servicios se ejecutan en una red Docker bridge dedicada llamada `monit
 - Docker
 - Docker Compose
 - Puerto 5000 disponible (Flask app)
-- Puertos 16686 y 4318 disponibles (Jaeger)
+- Puertos 16686 disponible (Jaeger)
 
 ## Instalación y Ejecución
 
@@ -165,13 +165,6 @@ La aplicación Flask está configurada con:
     └── start.sh
 ```
 
-### Modificación de Configuraciones
-
-- **Flask App**: Edita `flask-app/app.py` y `flask-app/instrumentation.py`
-- **Cliente**: Modifica `cliente1/rsyslog-client.conf` y `cliente1/snmpd.conf`
-- **Monitor**: Actualiza `monitor/rsyslog-server.conf`
-- **Jaeger**: Cambia la imagen en `docker-compose.yml` si es necesario
-
 ### Logs de Servicios
 
 Para ver logs de un servicio específico:
@@ -184,22 +177,6 @@ Ejemplos:
 docker-compose logs flask-app
 docker-compose logs jaeger
 ```
-
-## Solución de Problemas
-
-### Servicio flask-app no aparece en Jaeger
-1. Verifica que la aplicación esté recibiendo requests
-2. Revisa logs del contenedor flask-app
-3. Confirma que Jaeger esté ejecutándose y accesible
-
-### Logs no llegan al monitor
-1. Verifica configuración rsyslog en cliente1
-2. Confirma que el puerto UDP 514 esté abierto en monitor
-3. Revisa logs de rsyslog en ambos contenedores
-
-### Errores de construcción
-1. Limpia imágenes Docker: `docker system prune`
-2. Reconstruye sin cache: `docker-compose build --no-cache`
 
 ## Tecnologías Utilizadas
 
