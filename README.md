@@ -70,7 +70,7 @@ Todos los servicios se ejecutan en una red Docker bridge dedicada llamada `monit
 - Docker
 - Docker Compose
 - Puerto 5000 disponible (Flask app)
-- Puertos 16686 disponible (Jaeger)
+- Puerto 16686 disponible (Jaeger)
 
 ## Instalación y Ejecución
 
@@ -190,7 +190,3 @@ docker-compose logs jaeger
 ## Contexto Académico
 
 Este proyecto fue desarrollado como parte del curso **Administración y Seguridad de Redes**, con el objetivo de demostrar la implementación práctica de conceptos de monitoreo, logging, y observabilidad en entornos de red distribuidos.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT.
