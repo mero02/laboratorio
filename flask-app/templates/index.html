@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Monitoreo y Observabilidad</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Monitoreo y Observabilidad</h1>
+        <p>
+            Del monitoreo clásico con SNMP y Syslog hacia la observabilidad moderna
+            basada en trazas distribuidas con OpenTelemetry
+        </p>
+    </header>
+
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="/demo">Demo Interactiva</a>
+        <a href="http://localhost:16686" target="_blank">Jaeger UI</a>
+    </nav>
+
+    <main>
+        <section id="introduccion">
+            <h2>Introducción</h2>
+            <p>
+                En los entornos actuales de redes y sistemas, el monitoreo cumple un rol fundamental
+                para garantizar la disponibilidad, el rendimiento y la seguridad de la infraestructura.
+                Históricamente, este monitoreo se ha basado en tecnologías como SNMP y Syslog, orientadas
+                principalmente a dispositivos y servicios de red.
+            </p>
+            <p>
+                Sin embargo, con la adopción de arquitecturas distribuidas y microservicios, surge la necesidad
+                de contar con mecanismos que permitan comprender el comportamiento interno de las aplicaciones,
+                dando lugar al concepto de <strong>observabilidad</strong>.
+            </p>
+            <p>
+                Este proyecto implementa un laboratorio práctico que integra ambos enfoques, demostrando
+                cómo el monitoreo clásico y la observabilidad moderna no se reemplazan, sino que se complementan.
+            </p>
+        </section>
+
+        <section id="arquitectura-general">
+            <h2>Arquitectura General del Sistema</h2>
+            <p>
+                El laboratorio se ejecuta íntegramente sobre contenedores Docker conectados mediante
+                una red bridge dedicada. A nivel conceptual, el sistema se divide en dos bloques
+                arquitectónicos principales.
+            </p>
+        </section>
+
+        <section id="arquitectura-clasica">
+            <h2>Arquitectura de Monitoreo Clásico</h2>
+            <p>
+                Este bloque representa el enfoque tradicional de administración y monitoreo de redes,
+                centrado en la infraestructura y los servicios de sistema.
+            </p>
+
+            <ul>
+                <li><strong>cliente1</strong>: Actúa como dispositivo monitoreado, ejecutando un agente SNMP
+                    y enviando logs mediante Syslog.</li>
+                <li><strong>monitor</strong>: Funciona como servidor central de monitoreo, recibiendo logs
+                    y realizando consultas SNMP.</li>
+            </ul>
+
+            <p>
+                La comunicación se basa en protocolos ampliamente utilizados en entornos productivos:
+                Syslog (UDP 514) para eventos y SNMP (UDP 161) para métricas.
+            </p>
+
+            <figure>
+                <img src="{{ url_for('static', filename='images/arquitectura-clasica.png') }}"
+                     alt="Arquitectura de monitoreo clásico"
+                     style="max-width:100%; height:auto;">
+                <figcaption>Arquitectura de monitoreo clásico con Syslog y SNMP</figcaption>
+            </figure>
+        </section>
+
+        <section id="arquitectura-moderna">
+            <h2>Arquitectura de Observabilidad Moderna</h2>
+            <p>
+                Este bloque introduce un enfoque moderno orientado a la observación del comportamiento
+                interno de las aplicaciones.
+            </p>
+
+            <ul>
+                <li><strong>flask-app</strong>: Microservicio web desarrollado en Python con Flask,
+                    instrumentado con OpenTelemetry.</li>
+                <li><strong>jaeger</strong>: Plataforma de trazas distribuidas utilizada para recolectar,
+                    almacenar y visualizar las trazas generadas.</li>
+            </ul>
+
+            <p>
+                Cada solicitud al microservicio genera trazas distribuidas que permiten analizar el recorrido
+                completo de una petición, identificar latencias y detectar cuellos de botella.
+            </p>
+
+            <figure>
+                <img src="{{ url_for('static', filename='images/arquitectura-moderna.png') }}"
+                     alt="Arquitectura de observabilidad moderna"
+                     style="max-width:100%; height:auto;">
+                <figcaption>Arquitectura de observabilidad moderna con OpenTelemetry y Jaeger</figcaption>
+            </figure>
+        </section>
+
+        <section id="enfoques">
+            <h2>Enfoques Complementarios</h2>
+            <p>
+                El laboratorio no presenta dos proyectos independientes, sino un único sistema integrado
+                que combina ambos paradigmas.
+            </p>
+            <ul>
+                <li>
+                    El <strong>monitoreo clásico</strong> continúa siendo fundamental para la infraestructura,
+                    la red y los servicios de base.
+                </li>
+                <li>
+                    La <strong>observabilidad</strong> se vuelve esencial para comprender el comportamiento
+                    de aplicaciones distribuidas y microservicios.
+                </li>
+            </ul>
+        </section>
+
+        <section id="demo-link">
+            <h2>Demo Interactiva</h2>
+            <p>
+                A continuación se presenta una demo interactiva del laboratorio, donde se pueden ejecutar
+                pruebas en vivo, observar evidencias y analizar trazas distribuidas.
+            </p>
+            <a href="/demo" class="btn">Ir a Demo</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>Proyecto de Laboratorio - Administración y Seguridad de Redes</p>
+        <p>Alumno: San Pedro Mauro G.</p>
+    </footer>
+</body>
+</html>

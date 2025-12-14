@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Interactiva - Laboratorio de Monitoreo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Demo Interactiva del Laboratorio</h1>
+        <p>Pruebas en vivo y evidencia del sistema de monitoreo</p>
+    </header>
+
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="/demo">Demo</a>
+        <a href="http://localhost:16686" target="_blank">Jaeger UI</a>
+    </nav>
+
+    <main>
+        <section id="syslog">
+            <h2>Syslog Centralizado</h2>
+            <p>Cliente1 envía logs vía UDP 514 al monitor. Los logs se almacenan en /var/log/cliente1.log.</p>
+
+            <h3>Comandos para Prueba</h3>
+            <div class="commands">
+                <p><strong>Enviar log desde cliente1:</strong></p>
+                <code>docker exec -it cliente1 bash</code>
+                <button onclick='copyToClipboard("docker exec -it cliente1 bash")'>Copiar</button>
+                <br>
+                <br>
+                <code>logger "Mensaje de prueba desde Cliente1"</code>
+                <button onclick='copyToClipboard("logger \"Mensaje de prueba desde Cliente1\"")'>Copiar</button>
+            </div>
+            <div class="commands">
+                <p><strong>Ver logs en monitor:</strong></p>
+                <code>docker exec -it monitor bash</code>
+                <button onclick='copyToClipboard("docker exec -it monitor bash")'>Copiar</button>
+                <br>
+                <br>
+                <code>cat /var/log/cliente1.log</code>
+                <button onclick='copyToClipboard("cat /var/log/cliente1.log")'>Copiar</button>
+            </div>
+
+            <h3>Evidencia</h3>
+            <p>Capturas de pantalla de los comandos ejecutados y logs recibidos.</p>
+            <img src="{{ url_for('static', filename='images/syslog-evidence.png') }}" alt="Evidencia Syslog" style="max-width:100%; height:auto;">
+        </section>
+
+        <section id="snmp">
+            <h2>Monitoreo con SNMP</h2>
+            <p>
+                El contenedor <strong>monitor</strong> actúa como SNMP Manager y consulta métricas del contenedor
+                <strong>cliente1</strong>, que funciona como SNMP Agent, utilizando SNMPv2c con la comunidad
+                <em>public</em>.
+            </p>
+
+            <h3>Comandos para Prueba</h3>
+
+            <div class="commands">
+                <p><strong>Verificar agente SNMP activo en cliente1:</strong></p>
+                <p class="description">
+                    Confirma que el servicio snmpd se encuentra escuchando en el puerto UDP 161.
+                </p>
+                <code>docker exec -it cliente1 bash</code>
+                <button onclick='copyToClipboard("docker exec -it cliente1 bash")'>Copiar</button>
+                <br><br>
+                <code>ss -lnup | grep 161</code>
+                <button onclick='copyToClipboard("ss -lnup | grep 161")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Consultar nombre del sistema (sysName):</strong></p>
+                <p class="description">
+                    Identifica el hostname del dispositivo monitoreado. Es útil para verificar identidad y alcance del agente.
+                </p>
+                <code>docker exec -it monitor bash</code>
+                <button onclick='copyToClipboard("docker exec -it monitor bash")'>Copiar</button>
+                <br><br>
+                <code>snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.5.0</code>
+                <button onclick='copyToClipboard("snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.5.0")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Consultar tiempo de actividad del sistema (sysUpTime):</strong></p>
+                <p class="description">
+                    Muestra el tiempo desde que el sistema fue iniciado. Es una métrica básica de disponibilidad
+                    y detección de reinicios.
+                </p>
+                <code>snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.3.0</code>
+                <button onclick='copyToClipboard("snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.3.0")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Consultar descripción del sistema (sysDescr):</strong></p>
+                <p class="description">
+                    Devuelve información general sobre el sistema operativo y la plataforma donde corre el agente SNMP.
+                </p>
+                <code>snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.1.0</code>
+                <button onclick='copyToClipboard("snmpget -v2c -c public cliente1 1.3.6.1.2.1.1.1.0")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Listar interfaces de red (ifDescr):</strong></p>
+                <p class="description">
+                    Permite visualizar las interfaces de red disponibles en el sistema. Es un ejemplo típico
+                    de monitoreo de infraestructura mediante SNMP.
+                </p>
+                <code>snmpwalk -v2c -c public cliente1 1.3.6.1.2.1.2.2.1.2</code>
+                <button onclick='copyToClipboard("snmpwalk -v2c -c public cliente1 1.3.6.1.2.1.2.2.1.2")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Resolución de OIDs mediante MIB (snmptranslate):</strong></p>
+                <p class="description">
+                    Traduce un identificador simbólico definido en la MIB a su correspondiente OID numérico.
+                    Esto demuestra que el monitor cuenta con las MIBs correctamente instaladas.
+                </p>
+                <code>snmptranslate -IR sysName.0</code>
+                <button onclick='copyToClipboard("snmptranslate -IR sysName.0")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Consulta SNMP utilizando nombre simbólico (MIB):</strong></p>
+                <p class="description">
+                    Realiza una consulta SNMP usando el nombre definido en la MIB, en lugar del OID numérico.
+                    El resultado es equivalente, pero más legible para el administrador.
+                </p>
+                <code>snmpget -v2c -c public cliente1 sysName.0</code>
+                <button onclick='copyToClipboard("snmpget -v2c -c public cliente1 sysName.0")'>Copiar</button>
+            </div>
+
+            <div class="commands">
+                <p><strong>Recorrido de información del sistema (system group - MIB-II):</strong></p>
+                <p class="description">
+                    Muestra todas las variables del grupo system, que incluyen nombre, descripción,
+                    contacto, ubicación y tiempo de actividad del sistema.
+                </p>
+                <code>snmpwalk -v2c -c public cliente1 system</code>
+                <button onclick='copyToClipboard("snmpwalk -v2c -c public cliente1 system")'>Copiar</button>
+            </div>
+
+            <h3>Evidencia</h3>
+            <p>
+                Capturas de las consultas SNMP realizadas desde el monitor y las respuestas obtenidas
+                (hostname, uptime, descripción del sistema e interfaces de red).
+            </p>
+            <img src="{{ url_for('static', filename='images/snmp-evidence.png') }}"
+                alt="Evidencia SNMP"
+                style="max-width:100%; height:auto;">
+            <img src="{{ url_for('static', filename='images/snmp-evidence2.png') }}"
+                alt="Evidencia SNMP 2"
+                style="max-width:100%; height:auto;">
+        </section>
+
+        <section id="flask-observabilidad">
+            <h2>Flask y Observabilidad</h2>
+            <p>Microservicio instrumentado con OpenTelemetry. Cada request genera trazas en Jaeger.</p>
+
+            <h3>Pruebas Interactivas</h3>
+            <div class="test-buttons">
+                <button onclick="testEndpoint('/ping')">Probar /ping</button>
+                <button onclick="testEndpoint('/compute')">Probar /compute</button>
+            </div>
+            <div id="response"></div>
+
+            <h3>Visualizar Trazas</h3>
+            <p>Después de probar los endpoints, ve a <a href="http://localhost:16686" target="_blank">Jaeger UI</a> y selecciona el servicio "flask-app" para ver las trazas generadas.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Demo Interactiva - Laboratorio de Monitoreo</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
