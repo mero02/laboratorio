@@ -45,7 +45,7 @@ section {
 
 h2 {
     color: #2c3e50;
-    border-bottom: 2px solid #3498db;
+    border-bottom: 2px solid #001524;
     padding-bottom: 0.5rem;
 }
 
@@ -53,12 +53,12 @@ h2 {
     margin: 1rem 0;
     padding: 1rem;
     background-color: #ecf0f1;
-    border-left: 5px solid #3498db;
+    border-left: 5px solid #001829;
 }
 
 .btn {
     display: inline-block;
-    background-color: #3498db;
+    background-color: #002d4b;
     color: white;
     padding: 0.5rem 1rem;
     text-decoration: none;
@@ -67,7 +67,7 @@ h2 {
 }
 
 .btn:hover {
-    background-color: #bcb8ff;
+    background-color: #033f66;
 }
 
 .commands {

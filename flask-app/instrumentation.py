@@ -6,7 +6,6 @@ from opentelemetry.sdk.resources import Resource
 
 def setup_tracing(service_name: str):
 
-    print(f"Setting up tracing for {service_name}")
     resource = Resource.create({"service.name": service_name})
     provider = TracerProvider(resource=resource)
     trace.set_tracer_provider(provider)
