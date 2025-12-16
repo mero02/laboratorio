@@ -7,6 +7,8 @@ services:
     build: ./monitor
     container_name: monitor
     hostname: monitor
+    volumes:
+      - monitor-logs:/var/log
     networks:
       - monitoring-net
 
@@ -25,9 +27,12 @@ services:
     hostname: flask-app
     ports:
       - "5000:5000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - monitor-logs:/var/log/monitor
     networks:
       - monitoring-net
-  
+
   # Jaeger (Tracing)
   jaeger:
     image: jaegertracing/all-in-one:1.51
@@ -39,7 +44,12 @@ services:
     networks:
       - monitoring-net
 
+# Volumen para compartir logs entre monitor y flask-app
+volumes:
+ monitor-logs:
+   external: false
+
 # Red para los servicios
 networks:
-  monitoring-net:
-    driver: bridge
+ monitoring-net:
+   driver: bridge

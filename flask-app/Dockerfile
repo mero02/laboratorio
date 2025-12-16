@@ -1,5 +1,10 @@
 FROM python:3.10-slim
 
+# Instalar herramientas SNMP
+RUN apt-get update && apt-get install -y \
+    snmp \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Crear directorio de trabajo
 WORKDIR /app
 
