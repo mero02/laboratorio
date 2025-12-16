@@ -157,6 +157,7 @@ La aplicación Flask está configurada con:
 │   │   ├── style.css
 │   │   └── images/
 │   └── templates/
+│       ├── clasic-monitor.html
 │       ├── demo.html
 │       └── index.html
 └── monitor/
