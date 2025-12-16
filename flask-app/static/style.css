@@ -64,6 +64,7 @@ h2 {
     text-decoration: none;
     border-radius: 5px;
     margin-top: 1rem;
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -117,4 +118,427 @@ footer {
     background-color: #1c1e20;
     color: white;
     margin-top: 2rem;
+}
+
+/* Estilos para el dashboard del monitor clásico */
+.snmp-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.metric-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.metric-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.metric-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #001524;
+    word-wrap: break-word;
+}
+
+.logs-display {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.log-entry {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.no-logs {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.coming-soon {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 1rem;
+    color: #856404;
+}
+
+/* Dashboard avanzado - Fase 4 */
+#dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.status-indicators {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.status-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.status-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.status-indicator {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.status-indicator.active {
+    color: #28a745;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.logs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logs-header h3 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.logs-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#logFilter {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    width: 200px;
+}
+
+.clear-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.clear-btn:hover {
+    background-color: #c82333;
+}
+
+.logs-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.snmp-dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.metric-card.primary {
+    background-color: #007bff56;
+    color: white;
+}
+
+.metric-card.secondary {
+    background-color: #28a74654;
+    color: white;
+}
+
+.metric-card.info {
+    background-color: #17a3b857;
+    color: white;
+}
+
+.metric-value.small {
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.snmp-chart {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.snmp-chart h3 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chart-bar {
+    position: relative;
+    height: 30px;
+    background-color: #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: #28a745;
+    border-radius: 15px;
+    transition: width 0.3s ease;
+}
+
+.bar-label {
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+.snmp-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.status-text {
+    font-size: 0.9rem;
+    color: #28a745;
+    font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .snmp-dashboard {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .status-indicators {
+        grid-template-columns: 1fr;
+    }
+
+    .logs-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .logs-controls {
+        justify-content: center;
+    }
+
+    #logFilter {
+        width: 100%;
+    }
+}
+
+/* Estilos para simulación de logs */
+.simulation-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.quick-buttons {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.quick-buttons h3 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+}
+
+.log-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.info-btn {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.info-btn:hover {
+    background-color: #138496;
+}
+
+.warning-btn {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.warning-btn:hover {
+    background-color: #e0a800;
+}
+
+.error-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.error-btn:hover {
+    background-color: #c82333;
+}
+
+.debug-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.debug-btn:hover {
+    background-color: #545b62;
+}
+
+.custom-log {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.custom-log h3 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+}
+
+.form-group {
+    margin: 1rem 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #495057;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.send-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.send-btn:hover {
+    background-color: #218838;
+}
+
+.feedback-message {
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.feedback-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.feedback-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .simulation-controls {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 }
