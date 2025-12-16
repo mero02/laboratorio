@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Clásico - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Dashboard - Monitor Clásico</h1>
+        <p>Syslog y SNMP - Visualización en tiempo real</p>
+    </header>
+
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="/demo">Demo</a>
+        <a href="/classic-monitor">Monitor Clásico</a>
+        <a href="http://localhost:16686" target="_blank">Jaeger UI</a>
+    </nav>
+
+    <main>
+        <!-- Dashboard Header con indicadores de estado -->
+        <section id="dashboard-header">
+            <div class="status-indicators">
+                <div class="status-card">
+                    <h3>Monitor</h3>
+                    <div class="status-indicator active">● Activo</div>
+                </div>
+                <div class="status-card">
+                    <h3>Cliente1</h3>
+                    <div class="status-indicator active">● Activo</div>
+                </div>
+                <div class="status-card">
+                    <h3>SNMP</h3>
+                    <div class="status-indicator active">● Funcional</div>
+                </div>
+                <div class="status-card">
+                    <h3>Syslog</h3>
+                    <div class="status-indicator active">● Recibiendo</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard-grid">
+            <section id="syslog-monitor">
+                <h2>Logs Syslog - Cliente1</h2>
+                <p>Logs centralizados en tiempo real desde cliente1 vía UDP 514</p>
+
+                <div class="logs-container">
+                    <div class="logs-header">
+                        <h3>Logs Recientes</h3>
+                        <div class="logs-controls">
+                            <button onclick="refreshLogs()" class="btn">Actualizar</button>
+                            <button onclick="clearLogs()" class="clear-btn">Limpiar</button>
+                        </div>
+                    </div>
+                    <div class="logs-display" id="logsDisplay">
+                        {% if logs %}
+                            {% for log in logs %}
+                                {% if log.strip() %}
+                                    <div class="log-entry">{{ log }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="log-entry no-logs">Esperando logs de cliente1...</div>
+                        {% endif %}
+                    </div>
+                    <div class="logs-footer">
+                        <span id="logCount">0 logs mostrados</span>
+                        <span id="lastUpdate">Última actualización: --:--:--</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="simulation">
+                <h2>Simulación de Mensajes Logger</h2>
+                <p>Genera logs Syslog desde cliente1 hacia el monitor</p>
+
+                <div class="simulation-controls">
+                    <div class="quick-buttons">
+                        <h3>Logs Rápidos</h3>
+                        <button onclick="sendLog('Mensaje informativo desde dashboard')" class="log-btn info-btn">
+                            Info
+                        </button>
+                        <button onclick="sendLog('Mensaje de advertencia desde dashboard', 'user.warning')" class="log-btn warning-btn">
+                            Warning
+                        </button>
+                        <button onclick="sendLog('Mensaje de error desde dashboard', 'user.err')" class="log-btn error-btn">
+                            Error
+                        </button>
+                        <button onclick="sendLog('Mensaje de debug desde dashboard', 'user.debug')" class="log-btn debug-btn">
+                            Debug
+                        </button>
+                    </div>
+
+                    <div class="custom-log">
+                        <h3>Mensaje Personalizado</h3>
+                        <form onsubmit="sendCustomLog(event)">
+                            <div class="form-group">
+                                <label for="customMessage">Mensaje:</label>
+                                <input type="text" id="customMessage" placeholder="Escribe tu mensaje personalizado"
+                                    value="Log personalizado desde dashboard - $(date)" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="priority">Prioridad:</label>
+                                <select id="priority">
+                                    <option value="user.info">user.info</option>
+                                    <option value="user.warning">user.warning</option>
+                                    <option value="user.err">user.err</option>
+                                    <option value="user.debug">user.debug</option>
+                                    <option value="daemon.info">daemon.info</option>
+                                    <option value="syslog.info">syslog.info</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Enviar Log</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="simulation-feedback" class="feedback-message" style="display: none;"></div>
+            </section>
+
+        </div>
+        
+        <section id="snmp-data">
+            <h2>Métricas SNMP - Cliente1</h2>
+            <p>Datos obtenidos via SNMPv2c (comunidad: public)</p>
+
+            <div class="snmp-dashboard">
+                <div class="snmp-metrics">
+                    <div class="metric-card primary">
+                        <h3>Nombre del Sistema</h3>
+                        <div class="metric-value" id="sysName">{{ snmp_data.sysName }}</div>
+                    </div>
+
+                    <div class="metric-card primary">
+                        <h3>Tiempo de Actividad</h3>
+                        <div class="metric-value" id="sysUpTime">{{ snmp_data.sysUpTime }}</div>
+                    </div>
+
+                    <div class="metric-card secondary">
+                        <h3>Descripción del Sistema</h3>
+                        <div class="metric-value small" id="sysDescr">{{ snmp_data.sysDescr }}</div>
+                    </div>
+
+                    <div class="metric-card info">
+                        <h3>Última Actualización</h3>
+                        <div class="metric-value" id="timestamp">{{ snmp_data.timestamp }}</div>
+                    </div>
+                </div>
+
+                <div class="snmp-chart">
+                    <h3>Estado del Sistema</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-bar">
+                            <div class="bar-fill" id="cpuBar" style="width: {{ snmp_data.cpu }}%"></div>
+                            <span class="bar-label" id="cpuLabel">CPU: {{ snmp_data.cpu }}%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar-fill" id="memoryBar" style="width: {{ snmp_data.memory }}%"></div>
+                            <span class="bar-label" id="memoryLabel">Memoria: {{ snmp_data.memory }}%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar-fill" id="diskBar" style="width: {{ snmp_data.disk }}%"></div>
+                            <span class="bar-label" id="diskLabel">Disco: {{ snmp_data.disk }}%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar-fill" id="networkBar" style="width: {{ snmp_data.network }}%"></div>
+                            <span class="bar-label" id="networkLabel">Red: {{ snmp_data.network }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="snmp-controls">
+                <button onclick="refreshSNMP()" class="btn">Actualizar SNMP</button>
+                <span id="snmpStatus" class="status-text">Estado: Conectado</span>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p>Dashboard Monitor Clásico - Laboratorio de Monitoreo</p>
+    </footer>
+
+    <script>
+        let allLogs = [];
+        let filteredLogs = [];
+
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLogs();
+            updateLogCount();
+        });
+
+        async function loadLogs() {
+            try {
+                const response = await fetch('/api/logs');
+                const data = await response.json();
+                allLogs = data.logs;
+                filteredLogs = [...allLogs];
+                displayLogs(filteredLogs);
+                updateLogCount();
+                document.getElementById('lastUpdate').textContent = `Última actualización: ${new Date().toLocaleTimeString()}`;
+            } catch (error) {
+                console.error('Error loading logs:', error);
+            }
+        }
+
+        function displayLogs(logs) {
+            const logsDisplay = document.getElementById('logsDisplay');
+            logsDisplay.innerHTML = '';
+
+            if (logs.length === 0) {
+                logsDisplay.innerHTML = '<div class="log-entry no-logs">No hay logs disponibles</div>';
+                return;
+            }
+
+            logs.forEach(log => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.textContent = log;
+                logsDisplay.appendChild(logEntry);
+            });
+        }
+
+        function updateLogCount() {
+            const count = filteredLogs.length;
+            document.getElementById('logCount').textContent = `${count} logs mostrados`;
+        }
+
+        function clearLogs() {
+            if (confirm('¿Estás seguro de que quieres limpiar todos los logs mostrados?')) {
+                allLogs = [];
+                filteredLogs = [];
+                displayLogs(filteredLogs);
+                updateLogCount();
+                document.getElementById('logFilter').value = '';
+            }
+        }
+
+        function refreshLogs() {
+            loadLogs();
+        }
+
+        async function refreshSNMP() {
+            try {
+                const response = await fetch('/api/snmp-data');
+                const data = await response.json();
+
+                document.getElementById('sysName').textContent = data.sysName;
+                document.getElementById('sysUpTime').textContent = data.sysUpTime;
+                document.getElementById('sysDescr').textContent = data.sysDescr;
+                document.getElementById('timestamp').textContent = data.timestamp;
+
+                // Actualizar barras de progreso
+                document.getElementById('cpuBar').style.width = data.cpu + '%';
+                document.getElementById('cpuLabel').textContent = 'CPU: ' + data.cpu + '%';
+
+                document.getElementById('memoryBar').style.width = data.memory + '%';
+                document.getElementById('memoryLabel').textContent = 'Memoria: ' + data.memory + '%';
+
+                document.getElementById('diskBar').style.width = data.disk + '%';
+                document.getElementById('diskLabel').textContent = 'Disco: ' + data.disk + '%';
+
+                document.getElementById('networkBar').style.width = data.network + '%';
+                document.getElementById('networkLabel').textContent = 'Red: ' + data.network + '%';
+
+                document.getElementById('snmpStatus').textContent = 'Estado: Conectado';
+            } catch (error) {
+                console.error('Error refreshing SNMP data:', error);
+                document.getElementById('snmpStatus').textContent = 'Estado: Error de conexión';
+            }
+        }
+
+        async function sendLog(message, priority = 'user.info') {
+            await sendLogRequest(message, priority);
+        }
+
+        async function sendCustomLog(event) {
+            event.preventDefault();
+            const message = document.getElementById('customMessage').value;
+            const priority = document.getElementById('priority').value;
+            await sendLogRequest(message, priority);
+        }
+
+        async function sendLogRequest(message, priority) {
+            const feedback = document.getElementById('simulation-feedback');
+
+            try {
+                const response = await fetch('/api/simulate-log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message, priority })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    feedback.className = 'feedback-message success';
+                    feedback.textContent = `${result.message}`;
+                    feedback.style.display = 'block';
+
+                    // Actualizar logs después de 2 segundos
+                    setTimeout(() => {
+                        loadLogs();
+                    }, 2000);
+                } else {
+                    feedback.className = 'feedback-message error';
+                    feedback.textContent = `${result.message}`;
+                    feedback.style.display = 'block';
+                }
+
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 5000);
+
+            } catch (error) {
+                feedback.className = 'feedback-message error';
+                feedback.textContent = `Error de conexión: ${error.message}`;
+                feedback.style.display = 'block';
+
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Auto-refresh logs cada 30 segundos
+        setInterval(loadLogs, 30000);
+
+        // Auto-refresh SNMP cada 30 segundos
+        setInterval(refreshSNMP, 30000);
+    </script>
+</body>
+</html>
