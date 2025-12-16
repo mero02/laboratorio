@@ -5,7 +5,10 @@ RUN apt-get update && apt-get install -y \
     rsyslog \
     iproute2 \
     snmpd \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
+    snmp-mibs-downloader \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* \
+  && sed -i 's/^mibs :/# mibs :/' /etc/snmp/snmp.conf \
+  && download-mibs
 
 # Copiamos configuración del agente SNMP 
 COPY snmpd.conf /etc/snmp/snmpd.conf
