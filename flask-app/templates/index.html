@@ -6,7 +6,7 @@
     <title>Sistema de Monitoreo y Observabilidad</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="presentation-page">
     <header>
         <h1>Sistema de Monitoreo y Observabilidad</h1>
         <p>
@@ -26,116 +26,146 @@
         <section id="introduccion">
             <h2>Introducción</h2>
             <p>
-                En los entornos actuales de redes y sistemas, el monitoreo cumple un rol fundamental
-                para garantizar la disponibilidad, el rendimiento y la seguridad de la infraestructura.
-                Históricamente, este monitoreo se ha basado en tecnologías como SNMP y Syslog, orientadas
-                principalmente a dispositivos y servicios de red.
+                Este trabajo presenta un laboratorio práctico que compara dos enfoques
+                utilizados para comprender el estado y el comportamiento de un sistema.
             </p>
             <p>
-                Sin embargo, con la adopción de arquitecturas distribuidas y microservicios, surge la necesidad
-                de contar con mecanismos que permitan comprender el comportamiento interno de las aplicaciones,
-                dando lugar al concepto de <strong>observabilidad</strong>.
+              ⚫  Por un lado, el monitoreo clásico basado en Syslog y SNMP.
             </p>
             <p>
-                Este proyecto implementa un laboratorio práctico que integra ambos enfoques, demostrando
-                cómo el monitoreo clásico y la observabilidad moderna no se reemplazan, sino que se complementan.
-            </p>
+              ⚫  Por otro, la observabilidad moderna basada en OpenTelemetry y trazas distribuidas
+                visualizadas con Jaeger.
+            </p>            
         </section>
 
         <section id="arquitectura-general">
             <h2>Arquitectura General del Sistema</h2>
             <p>
-                El laboratorio se ejecuta íntegramente sobre contenedores Docker conectados mediante
-                una red bridge dedicada. A nivel conceptual, el sistema se divide en dos bloques
-                arquitectónicos principales.
+                El laboratorio se ejecuta sobre contenedores Docker interconectados
+                mediante una red bridge dedicada.
             </p>
+            <p>
+                Conceptualmente, el sistema se organiza en dos bloques arquitectónicos:
+            </p>
+            <ul>
+                <li>Un bloque de monitoreo clásico.</li>
+                <li>Un bloque de observabilidad moderna.</li>
+            </ul>
         </section>
 
         <section id="arquitectura-clasica">
             <h2>Arquitectura de Monitoreo Clásico</h2>
             <p>
-                Este bloque representa el enfoque tradicional de administración y monitoreo de redes,
-                centrado en la infraestructura y los servicios de sistema.
+                Este bloque representa el enfoque tradicional de monitoreo,
+                centrado en la infraestructura y los servicios del sistema.
             </p>
 
             <ul>
-                <li><strong>cliente1</strong>: Actúa como dispositivo monitoreado, ejecutando un agente SNMP
-                    y enviando logs mediante Syslog.</li>
-                <li><strong>monitor</strong>: Funciona como servidor central de monitoreo, recibiendo logs
-                    y realizando consultas SNMP.</li>
+                <li>
+                    <strong>cliente1</strong>: dispositivo monitoreado que ejecuta
+                    un agente SNMP y genera eventos mediante Syslog.
+                </li>
+                <li>
+                    <strong>monitor</strong>: servidor central que recibe logs
+                    y consulta métricas SNMP de forma activa.
+                </li>
             </ul>
 
             <p>
-                La comunicación se basa en protocolos ampliamente utilizados en entornos productivos:
-                Syslog (UDP 514) para eventos y SNMP (UDP 161) para métricas.
+                El flujo se basa en dos mecanismos complementarios:
             </p>
+            <ul>
+                <li>Syslog para eventos (push).</li>
+                <li>SNMP para métricas (pull).</li>
+            </ul>
 
             <figure>
                 <img src="{{ url_for('static', filename='images/arquitectura-clasica.png') }}"
-                     alt="Arquitectura de monitoreo clásico"
-                     style="max-width:100%; height:auto;">
-                <figcaption>Arquitectura de monitoreo clásico con Syslog y SNMP</figcaption>
+                    alt="Arquitectura de monitoreo clásico">
+                <figcaption>Monitoreo clásico con Syslog y SNMP</figcaption>
             </figure>
         </section>
 
         <section id="arquitectura-moderna">
             <h2>Arquitectura de Observabilidad Moderna</h2>
             <p>
-                Este bloque introduce un enfoque moderno orientado a la observación del comportamiento
-                interno de las aplicaciones.
+                Este bloque introduce un enfoque orientado a comprender
+                el comportamiento interno de la aplicación.
             </p>
 
             <ul>
-                <li><strong>flask-app</strong>: Microservicio web desarrollado en Python con Flask,
-                    instrumentado con OpenTelemetry.</li>
-                <li><strong>jaeger</strong>: Plataforma de trazas distribuidas utilizada para recolectar,
-                    almacenar y visualizar las trazas generadas.</li>
+                <li>
+                    <strong>flask-app</strong>: microservicio instrumentado con OpenTelemetry,
+                    responsable de generar trazas.
+                </li>
+                <li>
+                    <strong>jaeger</strong>: plataforma que recolecta y visualiza
+                    las trazas distribuidas.
+                </li>
             </ul>
 
             <p>
-                Cada solicitud al microservicio genera trazas distribuidas que permiten analizar el recorrido
-                completo de una petición, identificar latencias y detectar cuellos de botella.
+                Cada solicitud genera spans que permiten analizar el recorrido completo
+                de una petición, incluyendo tiempos y dependencias.
             </p>
 
             <figure>
                 <img src="{{ url_for('static', filename='images/arquitectura-moderna.png') }}"
-                     alt="Arquitectura de observabilidad moderna"
-                     style="max-width:100%; height:auto;">
-                <figcaption>Arquitectura de observabilidad moderna con OpenTelemetry y Jaeger</figcaption>
+                    alt="Arquitectura de observabilidad moderna">
+                <figcaption>Observabilidad moderna con OpenTelemetry y Jaeger</figcaption>
             </figure>
         </section>
 
         <section id="enfoques">
             <h2>Enfoques Complementarios</h2>
             <p>
-                El laboratorio no presenta dos proyectos independientes, sino un único sistema integrado
-                que combina ambos paradigmas.
+                El laboratorio demuestra que ambos enfoques no se excluyen,
+                sino que se complementan dentro de un mismo sistema.
             </p>
             <ul>
                 <li>
-                    El <strong>monitoreo clásico</strong> continúa siendo fundamental para la infraestructura,
-                    la red y los servicios de base.
+                    El <strong>monitoreo clásico</strong> es fundamental para
+                    infraestructura, red y servicios base.
                 </li>
                 <li>
-                    La <strong>observabilidad</strong> se vuelve esencial para comprender el comportamiento
-                    de aplicaciones distribuidas y microservicios.
+                    La <strong>observabilidad</strong> es clave para entender
+                    el comportamiento y rendimiento de aplicaciones modernas.
                 </li>
             </ul>
         </section>
 
-        <section id="demo-link">
-            <h2>Demo Interactiva</h2>
-            <p>
-                A continuación se presenta una demo interactiva del laboratorio, donde se pueden ejecutar
-                pruebas en vivo, observar evidencias y analizar trazas distribuidas.
-            </p>
-            <a href="/demo" class="btn">Ir a Demo</a>
-        </section>
     </main>
 
     <footer>
         <p>Proyecto de Laboratorio - Administración y Seguridad de Redes</p>
         <p>Alumno: San Pedro Mauro G.</p>
     </footer>
+
+    <!-- Botón de scroll to top -->
+    <button id="scrollToTopBtn" class="scroll-to-top" title="Volver arriba">
+        🔺
+    </button>
+
+    <script>
+        // Scroll to top functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // Mostrar/ocultar botón basado en scroll
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        // Scroll suave hacia arriba al hacer click
+        scrollToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>

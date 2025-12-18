@@ -175,6 +175,32 @@
         <p>Demo - Laboratorio de Monitoreo</p>
     </footer>
 
+    <!-- Botón de scroll to top -->
+    <button id="scrollToTopBtn" class="scroll-to-top" title="Volver arriba">
+        🔺
+    </button>
+
+    <script>
+        // Scroll to top functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // Mostrar/ocultar botón basado en scroll
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        // Scroll suave hacia arriba al hacer click
+        scrollToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
